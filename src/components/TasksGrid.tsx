@@ -6,7 +6,7 @@ import './Style.scss';
 function TasksGrid() {
     
     const taskContext = useContext(TaskContext);
-    const [tasks, updateTasks] = useState(taskContext?.tasks);
+    const [tasks, updateTask] = useState(taskContext?.tasks);
     const [deletedTasks, updateDeletedTasks] = useState(taskContext?.deletedTasks);
     const [AddTaskMode, setAddTaskMode] = useState(false);
 
@@ -15,7 +15,7 @@ function TasksGrid() {
     }
 
     function deleteTask(id: any){
-        const taskID = tasks.findIndex((tId) => tId.id === id);
+        const taskID = tasks.findIndex((tId:any) => tId.id === id);
         const items = Array.from(tasks);
         const deletedItems = Array.from(deletedTasks);
         taskContext?.deletedTasks.push(tasks[taskID]);
@@ -23,7 +23,7 @@ function TasksGrid() {
         taskContext?.tasks.splice(taskID, 1);
         items.splice(taskID, 1);
         updateDeletedTasks(deletedItems);
-        updateTasks(items);
+        updateTask(items);
     }
 
     function handleOnDragEnd(result : any) {
@@ -33,12 +33,12 @@ function TasksGrid() {
         const [reorderedItem] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reorderedItem);
     
-        updateTasks(items);
+        updateTask(items);
       }
 
     return(
         <>
-            <TaskContext.Provider value={{tasks, deletedTasks, AddTaskMode, setAddTaskMode}}>
+            <TaskContext.Provider value={{tasks, deletedTasks, updateTask, updateDeletedTasks, AddTaskMode, setAddTaskMode}}>
             <button id="AddTaks" type="button" onClick={handleOnClick}>Add Task</button>
             <div id="container">
                 <h5>To Do</h5>
@@ -46,7 +46,7 @@ function TasksGrid() {
                     <Droppable droppableId='tasks'>
                     {(provided) => (
                     <ul className="list-group" {...provided.droppableProps} ref={provided.innerRef}>
-                        {tasks.map(({id, title}, index) => {
+                        {tasks.map(({id, title} : any, index:any) => {
                         return (
                             <Draggable key={String(id)} draggableId={String(id)} index={index}>
                                 {(provided) => (
@@ -65,7 +65,7 @@ function TasksGrid() {
                 <div id="deletedTasks">
                     <h5>Done</h5>
                     <ul className="list-group">
-                        {deletedTasks?.map((task) => {
+                        {deletedTasks?.map((task:any) => {
                             return (
                                 <li className="list-group-item disabled" key={task.id}>
                                     <p id="deletedTasksP" key={task.id}>{task.title}</p>
